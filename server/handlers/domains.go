@@ -46,18 +46,13 @@ func (h *HandlerParams) CreateDomain() gin.HandlerFunc {
 // GET /v1/domains
 func (h *HandlerParams) ListDomains() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		var request CreateDomainRequestBody
-		if err := c.ShouldBindJSON(&request); err != nil {
-			c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
-			return
-		}
 		if !helpers.IsAuthenticated(c) {
 			c.AbortWithStatus(401)
 			return
 		}
 
 		var domains []models.Domain
-		result := h.Db.Find(&domains)
+		result := h.Db.Order("created_at desc").Find(&domains)
 		if result.Error != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": result.Error.Error()})
 			return

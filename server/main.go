@@ -6,6 +6,7 @@ import (
 
 	"antin0.de/studio/handlers"
 
+	"github.com/gin-contrib/cors"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
@@ -19,6 +20,11 @@ func main() {
 	}
 
 	r := gin.Default()
+
+	config := cors.DefaultConfig()
+	config.AllowOrigins = []string{"http://localhost:3000"}
+	config.AllowCredentials = true
+	r.Use(cors.New(config))
 
 	// Setup sessions with cookie store
 	cookieSecret := os.Getenv("COOKIE_SECRET")

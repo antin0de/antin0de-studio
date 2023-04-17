@@ -2,17 +2,20 @@ import {
   Button,
   FormControl,
   FormErrorMessage,
-  FormHelperText,
   FormLabel,
   Input,
 } from "@chakra-ui/react";
 import { Formik, FormikErrors } from "formik";
+import { AuthService } from "../services/AuthService";
+import { useNavigate } from "react-router-dom";
 
 interface LoginFormFormModel {
   password: string;
 }
 
 export function LoginPage() {
+  const navigate = useNavigate();
+
   return (
     <div className="max-w-xl mx-auto flex flex-col gap-4">
       <h1 className="text-2xl font-bold mt-16">Login</h1>
@@ -25,8 +28,16 @@ export function LoginPage() {
           }
           return errors;
         }}
-        onSubmit={(values, { setSubmitting }) => {
-          // Call the API
+        onSubmit={async (values, { setSubmitting }) => {
+          try {
+            await AuthService.login(values.password);
+            navigate("/dashboard/domains");
+          } catch (e) {
+            if (e instanceof Error) {
+              window.alert(e.message);
+              setSubmitting(false);
+            }
+          }
         }}
       >
         {({
