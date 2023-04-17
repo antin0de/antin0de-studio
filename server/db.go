@@ -3,6 +3,7 @@ package main
 import (
 	"os"
 
+	"antin0.de/studio/models"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
@@ -15,6 +16,8 @@ func ConnectAndMigrateDatabase() *gorm.DB {
 	if err != nil {
 		panic("Failed to connect database")
 	}
+
+	db.AutoMigrate(&models.Domain{})
 
 	return db
 }
