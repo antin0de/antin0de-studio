@@ -23,6 +23,7 @@ func (h *HandlerParams) CreateDomain() gin.HandlerFunc {
 		}
 		if !helpers.IsAuthenticated(c) {
 			c.AbortWithStatus(401)
+			return
 		}
 
 		var domain models.Domain
@@ -52,6 +53,7 @@ func (h *HandlerParams) ListDomains() gin.HandlerFunc {
 		}
 		if !helpers.IsAuthenticated(c) {
 			c.AbortWithStatus(401)
+			return
 		}
 
 		var domains []models.Domain
