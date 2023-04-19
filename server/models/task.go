@@ -11,6 +11,7 @@ type Task struct {
 	Name         string    `json:"name"`
 	TaskType     string    `json:"taskType"`
 	TaskConfig   string    `json:"taskConfig"`
+	TaskRuns     []TaskRun `json:"taskRuns"`
 	CronSchedule string    `json:"cronSchedule"`
 	CreatedAt    time.Time `json:"createdAt"`
 	UpdatedAt    time.Time `json:"updatedAt"`

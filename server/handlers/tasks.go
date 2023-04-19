@@ -134,6 +134,37 @@ func (h *HandlerParams) UpdateTask() gin.HandlerFunc {
 	}
 }
 
+// Get one task
+// GET /v1/tasks/:taskId
+func (h *HandlerParams) GetTask() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		if !helpers.IsAuthenticated(c) {
+			c.AbortWithStatus(http.StatusUnauthorized)
+			return
+		}
+		taskId := c.Param("taskId")
+		var task models.Task
+		result := h.Db.Where("id =?", taskId).First(&task)
+		if result.RowsAffected == 0 {
+			c.AbortWithStatus(http.StatusNotFound)
+			return
+		}
+
+		var taskRuns []models.TaskRun
+		h.Db.Where("task_id =?", task.ID).Order("created_at desc").Find(&taskRuns)
+
+		c.JSON(200, gin.H{
+			"task": gin.H{
+				"name":         task.Name,
+				"taskType":     task.TaskType,
+				"taskConfig":   task.TaskConfig,
+				"cronSchedule": task.CronSchedule,
+				"taskRuns":     taskRuns,
+			},
+		})
+	}
+}
+
 // List all tasks
 // GET /v1/tasks
 func (h *HandlerParams) ListTasks() gin.HandlerFunc {

@@ -10,6 +10,7 @@ import { DashboardLayout } from "./layouts/DashboardLayout";
 import { DomainsPage } from "./pages/dashboard/Domains";
 import { TasksPage } from "./pages/dashboard/Tasks";
 import { CreateTaskPage } from "./pages/dashboard/CreateTask";
+import { TaskDetailsPage } from "./pages/dashboard/TaskDetails";
 
 const router = createBrowserRouter([
   {
@@ -27,6 +28,12 @@ const router = createBrowserRouter([
       {
         path: "tasks",
         element: <TasksPage />,
+        children: [
+          {
+            path: ":taskId",
+            element: <TaskDetailsPage />,
+          },
+        ],
       },
       {
         path: "tasks/create",

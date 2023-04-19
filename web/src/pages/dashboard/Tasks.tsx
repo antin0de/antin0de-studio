@@ -1,60 +1,27 @@
 import {
-  Badge,
   Button,
-  FormControl,
-  FormHelperText,
-  Input,
-  InputGroup,
-  InputRightElement,
   Stat,
   StatHelpText,
   StatLabel,
   StatNumber,
-  Table,
-  TableCaption,
-  TableContainer,
-  Tbody,
-  Td,
-  Tfoot,
-  Th,
-  Thead,
-  Tr,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
-import { Domain, DomainService } from "../../services/DomainService";
-import moment from "moment";
-import { AiOutlineDownload } from "react-icons/ai";
-import { useNavigate } from "react-router-dom";
+import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import { Task, TaskService } from "../../services/TaskService";
 
 export function TasksPage() {
-  const [domains, setDomains] = useState<Domain[]>([]);
-  const [filter, setFilter] = useState("");
-  const [appliedFilter, setAppliedFilter] = useState("");
-  const [shownDomains, setShownDomains] = useState<Domain[]>([]);
+  const [tasks, setTasks] = useState<Task[]>([]);
   const navigate = useNavigate();
+  const location = useLocation();
 
-  const reloadDomains = async () => {
-    const domains = await DomainService.listDomains();
-    setDomains(domains);
+  const reloadTasks = async () => {
+    const tasks = await TaskService.listTasks();
+    setTasks(tasks);
   };
 
   useEffect(() => {
-    reloadDomains();
+    reloadTasks();
   }, []);
-
-  useEffect(() => {
-    try {
-      setShownDomains(
-        domains.filter((domain) =>
-          domain.fqdn.match(filter ? new RegExp(filter) : ".*")
-        )
-      );
-    } catch (e) {
-      if (e instanceof Error) {
-        window.alert(e.message);
-      }
-    }
-  }, [domains, appliedFilter]);
 
   return (
     <div className="flex-1 flex flex-col gap-4">
@@ -63,30 +30,8 @@ export function TasksPage() {
           <div>
             <Stat>
               <StatLabel>Total Tasks</StatLabel>
-              <StatNumber>{domains.length}</StatNumber>
+              <StatNumber>{tasks.length}</StatNumber>
               <StatHelpText>All time</StatHelpText>
-            </Stat>
-          </div>
-          <div>
-            <Stat>
-              <StatLabel>Total Runs</StatLabel>
-              <StatNumber>
-                {domains
-                  .map((domain) => domain.services.length)
-                  .reduce((prev, cur) => prev + cur, 0)}
-              </StatNumber>
-              <StatHelpText>All time</StatHelpText>
-            </Stat>
-          </div>
-          <div>
-            <Stat>
-              <StatLabel>Runs in Queue</StatLabel>
-              <StatNumber>
-                {domains
-                  .map((domain) => domain.services.length)
-                  .reduce((prev, cur) => prev + cur, 0)}
-              </StatNumber>
-              <StatHelpText>Current</StatHelpText>
             </Stat>
           </div>
         </div>
@@ -99,11 +44,30 @@ export function TasksPage() {
       <div className="flex gap-8">
         <div className="w-96">
           <h2 className="text-xl">Tasks</h2>
+          <div className="flex flex-col gap-4 pt-4">
+            {tasks.map((task) => (
+              <div
+                key={task.id}
+                onClick={() => navigate("/dashboard/tasks/" + task.id)}
+                className={`px-4 py-2 bg-white/5 flex flex-col gap-2 cursor-pointer hover:bg-white/20 border-r-4 hover:border-white ${
+                  location.pathname.match("/dashboard/tasks/" + task.id)
+                    ? "bg-white/20 border-white"
+                    : ""
+                }`}
+              >
+                <div>{task.name}</div>
+                <div className="text-xs">
+                  {task.taskType} - {task.cronSchedule}
+                </div>
+                <div className="text-xs text-white/50">{task.id}</div>
+              </div>
+            ))}
+          </div>
         </div>
         <div className="flex-1">
           <h2 className="text-xl">Task Details</h2>
-          <div className="text-sm text-white/50">
-            Choose a task on the left to see its details
+          <div className="pt-4">
+            <Outlet />
           </div>
         </div>
       </div>

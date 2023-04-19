@@ -60,6 +60,7 @@ func main() {
 	r.POST("/v1/services", h.CreateService())
 	r.POST("/v1/tasks", h.CreateTask())
 	r.GET("/v1/tasks", h.ListTasks())
+	r.GET("/v1/tasks/:taskId", h.GetTask())
 	r.PUT("/v1/tasks/:taskId", h.UpdateTask())
 	r.DELETE("/v1/tasks/:taskId", h.DeleteTask())
 
