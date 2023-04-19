@@ -1,14 +1,16 @@
 import { useEffect } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
+import { Outlet, useLocation, useNavigate, useRoutes } from "react-router-dom";
 import { AuthService } from "../services/AuthService";
+import { MdDomain, MdDirectionsRun } from "react-icons/md";
 
 const LINKS = [
-  { title: "Domains", path: "/dashboard/domains" },
-  { title: "Emails", path: "/dashboard/emails" },
+  { title: "Domains", path: "/dashboard/domains", icon: <MdDomain /> },
+  { title: "Tasks", path: "/dashboard/tasks", icon: <MdDirectionsRun /> },
 ];
 
 export function DashboardLayout() {
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     (async () => {
@@ -26,10 +28,15 @@ export function DashboardLayout() {
           {LINKS.map((link) => (
             <div
               key={link.title}
-              className="px-4 py-2 bg-white/5 text-sm hover:bg-white/20 cursor-pointer"
+              className={`px-4 py-2 bg-white/5 hover:bg-white/20 cursor-pointer flex flex-col gap-2 border-r-4 hover:border-white ${
+                location.pathname.match(link.path)
+                  ? "bg-white/20 border-white"
+                  : ""
+              }`}
               onClick={() => navigate(link.path)}
             >
-              {link.title}
+              <div>{link.icon}</div>
+              <div className="text-sm">{link.title}</div>
             </div>
           ))}
         </div>

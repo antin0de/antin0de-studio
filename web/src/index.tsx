@@ -8,6 +8,8 @@ import { ChakraProvider, ColorModeScript } from "@chakra-ui/react";
 import theme from "./theme";
 import { DashboardLayout } from "./layouts/DashboardLayout";
 import { DomainsPage } from "./pages/dashboard/Domains";
+import { TasksPage } from "./pages/dashboard/Tasks";
+import { CreateTaskPage } from "./pages/dashboard/CreateTask";
 
 const router = createBrowserRouter([
   {
@@ -21,6 +23,14 @@ const router = createBrowserRouter([
       {
         path: "domains",
         element: <DomainsPage />,
+      },
+      {
+        path: "tasks",
+        element: <TasksPage />,
+      },
+      {
+        path: "tasks/create",
+        element: <CreateTaskPage />,
       },
     ],
   },

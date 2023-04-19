@@ -5,12 +5,15 @@ import (
 	"os"
 
 	"antin0.de/studio/handlers"
+	"antin0.de/studio/helpers"
+	"antin0.de/studio/models"
 
 	"github.com/gin-contrib/cors"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
+	"github.com/robfig/cron/v3"
 )
 
 func main() {
@@ -33,7 +36,20 @@ func main() {
 
 	db := ConnectAndMigrateDatabase()
 
-	h := handlers.HandlerParams{Db: db}
+	taskToCronEntryMap := make(map[string]cron.EntryID)
+	// Get all tasks
+	var tasks []models.Task
+	result := db.Find(&tasks)
+	if result.Error != nil {
+		panic(result.Error)
+	}
+	c := cron.New()
+	for _, task := range tasks {
+		helpers.ScheduleTask(task, c, &taskToCronEntryMap)
+	}
+	c.Start()
+
+	h := handlers.HandlerParams{Db: db, CronInstance: c, TaskToCronEntryMap: &taskToCronEntryMap}
 
 	// Routes
 	r.POST("/v1/login", h.Login())
@@ -42,6 +58,10 @@ func main() {
 	r.POST("/v1/domains", h.CreateDomain())
 	r.GET("/v1/domains", h.ListDomains())
 	r.POST("/v1/services", h.CreateService())
+	r.POST("/v1/tasks", h.CreateTask())
+	r.GET("/v1/tasks", h.ListTasks())
+	r.PUT("/v1/tasks/:taskId", h.UpdateTask())
+	r.DELETE("/v1/tasks/:taskId", h.DeleteTask())
 
 	r.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
 }

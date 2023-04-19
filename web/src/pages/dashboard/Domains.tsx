@@ -68,12 +68,25 @@ export function DomainsPage() {
   return (
     <div className="flex-1">
       <div className="flex flex-col gap-4">
-        <div>
-          <Stat>
-            <StatLabel>Total Domains</StatLabel>
-            <StatNumber>{domains.length}</StatNumber>
-            <StatHelpText>All time</StatHelpText>
-          </Stat>
+        <div className="flex gap-8">
+          <div>
+            <Stat>
+              <StatLabel>Total Domains</StatLabel>
+              <StatNumber>{domains.length}</StatNumber>
+              <StatHelpText>All time</StatHelpText>
+            </Stat>
+          </div>
+          <div>
+            <Stat>
+              <StatLabel>Total Services</StatLabel>
+              <StatNumber>
+                {domains
+                  .map((domain) => domain.services.length)
+                  .reduce((prev, cur) => prev + cur, 0)}
+              </StatNumber>
+              <StatHelpText>All time</StatHelpText>
+            </Stat>
+          </div>
         </div>
         <div className="flex gap-2">
           <FormControl>
@@ -128,7 +141,7 @@ export function DomainsPage() {
                   <Td>
                     <div className="max-w-sm whitespace-normal">
                       {domain.services.map((service) => (
-                        <Badge className="mr-2">
+                        <Badge className="mr-2" key={service.id}>
                           {service.name} ({service.port}/{service.protocol})
                         </Badge>
                       ))}
