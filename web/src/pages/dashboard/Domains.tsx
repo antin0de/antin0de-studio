@@ -1,4 +1,5 @@
 import {
+  Badge,
   Button,
   FormControl,
   FormHelperText,
@@ -113,6 +114,7 @@ export function DomainsPage() {
             <Thead>
               <Tr>
                 <Th className="ps-0">FQDN</Th>
+                <Th>Services</Th>
                 <Th>Created At</Th>
                 <Th>ID</Th>
               </Tr>
@@ -122,6 +124,15 @@ export function DomainsPage() {
                 <Tr key={domain.id}>
                   <Td className="ps-0">
                     <code>{domain.fqdn}</code>
+                  </Td>
+                  <Td>
+                    <div className="max-w-sm whitespace-normal">
+                      {domain.services.map((service) => (
+                        <Badge className="mr-2">
+                          {service.name} ({service.port}/{service.protocol})
+                        </Badge>
+                      ))}
+                    </div>
                   </Td>
                   <Td className="text-xs">
                     <code>{moment(domain.createdAt).calendar()}</code>

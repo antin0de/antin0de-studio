@@ -52,7 +52,7 @@ func (h *HandlerParams) ListDomains() gin.HandlerFunc {
 		}
 
 		var domains []models.Domain
-		result := h.Db.Order("created_at desc").Find(&domains)
+		result := h.Db.Order("created_at desc").Preload("Services").Find(&domains)
 		if result.Error != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": result.Error.Error()})
 			return

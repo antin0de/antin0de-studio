@@ -1,8 +1,16 @@
 import { ApiService } from "../api/ApiService";
 
+export interface Service {
+  id: string;
+  name: string;
+  port: number;
+  protocol: string;
+}
+
 export interface Domain {
   id: string;
   fqdn: string;
+  services: Service[];
   createdAt: string;
 }
 

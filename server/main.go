@@ -41,6 +41,7 @@ func main() {
 	r.POST("/v1/logout", h.Logout())
 	r.POST("/v1/domains", h.CreateDomain())
 	r.GET("/v1/domains", h.ListDomains())
+	r.POST("/v1/services", h.CreateService())
 
 	r.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
 }
