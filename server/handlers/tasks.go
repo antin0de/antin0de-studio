@@ -155,6 +155,7 @@ func (h *HandlerParams) GetTask() gin.HandlerFunc {
 
 		c.JSON(200, gin.H{
 			"task": gin.H{
+				"id":           task.ID,
 				"name":         task.Name,
 				"taskType":     task.TaskType,
 				"taskConfig":   task.TaskConfig,
