@@ -50,7 +50,7 @@ func (h *HandlerParams) CreateTask() gin.HandlerFunc {
 			return
 		}
 
-		helpers.ScheduleTask(task, h.CronInstance, h.TaskToCronEntryMap)
+		helpers.ScheduleTask(task, h.CronInstance, h.TaskToCronEntryMap, h.Db)
 
 		c.JSON(200, gin.H{
 			"id": task.ID,
@@ -126,7 +126,7 @@ func (h *HandlerParams) UpdateTask() gin.HandlerFunc {
 		task.CronSchedule = request.CronSchedule
 		h.Db.Save(&task)
 
-		helpers.ScheduleTask(task, h.CronInstance, h.TaskToCronEntryMap)
+		helpers.ScheduleTask(task, h.CronInstance, h.TaskToCronEntryMap, h.Db)
 
 		c.JSON(200, gin.H{
 			"id": task.ID,

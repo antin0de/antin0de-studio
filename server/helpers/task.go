@@ -6,6 +6,7 @@ import (
 
 	"antin0.de/studio/models"
 	"github.com/robfig/cron/v3"
+	"gorm.io/gorm"
 )
 
 func IsValidTaskType(taskType string) bool {
@@ -17,7 +18,7 @@ func IsValidCronExpression(cronExpression string) bool {
 	return r.MatchString(cronExpression)
 }
 
-func ScheduleTask(task models.Task, c *cron.Cron, entryMap *map[string]cron.EntryID) bool {
+func ScheduleTask(task models.Task, c *cron.Cron, entryMap *map[string]cron.EntryID, db *gorm.DB) bool {
 	println("Scheduling task:", task.Name, task.ID.String(), task.CronSchedule)
 	entryId, exists := (*entryMap)[task.ID.String()]
 	if exists {
@@ -25,7 +26,15 @@ func ScheduleTask(task models.Task, c *cron.Cron, entryMap *map[string]cron.Entr
 		c.Remove(entryId)
 		delete(*entryMap, task.ID.String())
 	}
-	entryId, _ = c.AddFunc(task.CronSchedule, func() { fmt.Println("Running", task.Name, task.ID.String(), task.CronSchedule) })
+	entryId, _ = c.AddFunc(task.CronSchedule, func() {
+		var taskRun = models.TaskRun{
+			TaskID: task.ID,
+			Status: "PENDING",
+			Log:    "",
+		}
+		db.Create(&taskRun)
+		fmt.Println("Creating task run", task.Name, task.ID.String(), task.CronSchedule, "runID=", taskRun.ID.String())
+	})
 	(*entryMap)[task.ID.String()] = entryId
 	return true
 }

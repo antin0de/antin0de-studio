@@ -45,7 +45,7 @@ func main() {
 	}
 	c := cron.New()
 	for _, task := range tasks {
-		helpers.ScheduleTask(task, c, &taskToCronEntryMap)
+		helpers.ScheduleTask(task, c, &taskToCronEntryMap, db)
 	}
 	c.Start()
 
