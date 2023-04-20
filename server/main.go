@@ -63,6 +63,8 @@ func main() {
 	r.GET("/v1/tasks/:taskId", h.GetTask())
 	r.PUT("/v1/tasks/:taskId", h.UpdateTask())
 	r.DELETE("/v1/tasks/:taskId", h.DeleteTask())
+	r.POST("/v1/task_runs/dequeue", h.DequeueTaskRun())
+	r.PUT("/v1/task_runs/:taskRunId", h.UpdateTaskRun())
 
 	r.Run() // listen and serve on 0.0.0.0:8080 (for windows "localhost:8080")
 }

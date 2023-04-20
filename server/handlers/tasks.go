@@ -170,6 +170,11 @@ func (h *HandlerParams) GetTask() gin.HandlerFunc {
 // GET /v1/tasks
 func (h *HandlerParams) ListTasks() gin.HandlerFunc {
 	return func(c *gin.Context) {
+		if !helpers.IsAuthenticated(c) {
+			c.AbortWithStatus(http.StatusUnauthorized)
+			return
+		}
+
 		var tasks []models.Task
 		result := h.Db.Order("created_at").Find(&tasks)
 		if result.Error != nil {
