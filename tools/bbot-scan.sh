@@ -32,7 +32,7 @@ fi
 SCAN_DIR="$HOME/.bbot/scans/$SCAN_NAME"
 CSV_OUTPUT="$SCAN_DIR/output.csv"
 
-./bbot-docker.sh -t $DOMAIN -n $SCAN_NAME -f subdomain-enum
+./bbot-docker.sh -t $DOMAIN -n $SCAN_NAME -f subdomain-enum -y
 while IFS="," read -r REC_TYPE REC_VALUE REC_REMAINING
 do
     if [[ "$REC_TYPE" == "DNS_NAME" ]]; then
