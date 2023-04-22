@@ -10,7 +10,7 @@ import (
 )
 
 func IsValidTaskType(taskType string) bool {
-	return taskType == "DOMAIN_SCAN"
+	return taskType == "DOMAIN_SCAN" || taskType == "BBOT_SCAN"
 }
 
 func IsValidCronExpression(cronExpression string) bool {

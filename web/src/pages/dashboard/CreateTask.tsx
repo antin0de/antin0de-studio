@@ -1,30 +1,8 @@
-import {
-  Badge,
-  Button,
-  FormControl,
-  FormHelperText,
-  Input,
-  InputGroup,
-  InputRightElement,
-  Stat,
-  StatHelpText,
-  StatLabel,
-  StatNumber,
-  Table,
-  TableCaption,
-  TableContainer,
-  Tbody,
-  Td,
-  Tfoot,
-  Th,
-  Thead,
-  Tr,
-} from "@chakra-ui/react";
-import { useEffect, useState } from "react";
-import { Domain, DomainService } from "../../services/DomainService";
-import moment from "moment";
+import { Button } from "@chakra-ui/react";
 import { AiOutlineCaretLeft } from "react-icons/ai";
 import { useNavigate } from "react-router-dom";
+import { TaskForm } from "../../components/TaskForm";
+import { TaskService } from "../../services/TaskService";
 
 export function CreateTaskPage() {
   const navigate = useNavigate();
@@ -42,6 +20,18 @@ export function CreateTaskPage() {
         </Button>
       </div>
       <h2 className="text-xl">Create Task</h2>
+      <TaskForm
+        buttonText="Create"
+        onSubmit={async (values) => {
+          await TaskService.createTask({
+            name: values.name,
+            taskType: values.taskType,
+            taskConfig: values.taskConfig,
+            cronSchedule: values.cronSchedule,
+          });
+          navigate("/dashboard/tasks");
+        }}
+      />
     </div>
   );
 }

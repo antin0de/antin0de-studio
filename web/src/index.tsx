@@ -12,6 +12,7 @@ import { TasksPage } from "./pages/dashboard/Tasks";
 import { CreateTaskPage } from "./pages/dashboard/CreateTask";
 import { TaskDetailsPage } from "./pages/dashboard/TaskDetails";
 import { NotFoundPage } from "./pages/NotFoundPage";
+import { EditTaskPage } from "./pages/dashboard/EditTask";
 
 const router = createBrowserRouter([
   {
@@ -39,6 +40,10 @@ const router = createBrowserRouter([
       {
         path: "tasks/create",
         element: <CreateTaskPage />,
+      },
+      {
+        path: "tasks/:taskId/edit",
+        element: <EditTaskPage />,
       },
     ],
   },

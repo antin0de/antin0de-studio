@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { Task, TaskService } from "../../services/TaskService";
 import moment from "moment";
-import { Badge } from "@chakra-ui/react";
+import { Badge, Button } from "@chakra-ui/react";
 
 export function TaskDetailsPage() {
   const { taskId } = useParams<{ taskId: string }>();
   const [task, setTask] = useState<Task | null>(null);
+  const navigate = useNavigate();
 
   const reloadTask = async (taskId: string) => {
     const task = await TaskService.getTask(taskId);
@@ -26,6 +27,14 @@ export function TaskDetailsPage() {
         {task.taskType} - {task.cronSchedule}
       </div>
       <div className="text-sm text-white/50">{task.id}</div>
+      <div>
+        <Button
+          size="sm"
+          onClick={() => navigate("/dashboard/tasks/" + taskId + "/edit")}
+        >
+          Edit Task
+        </Button>
+      </div>
       <h2 className="text-lg mt-8">Task Runs</h2>
       <div className="flex flex-col gap-2 max-w-2xl">
         {(task.taskRuns ?? []).map((run) => (

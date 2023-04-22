@@ -49,9 +49,9 @@ export function TasksPage() {
               <div
                 key={task.id}
                 onClick={() => navigate("/dashboard/tasks/" + task.id)}
-                className={`px-4 py-2 bg-white/5 flex flex-col gap-2 cursor-pointer hover:bg-white/20 border-r-4 hover:border-white ${
+                className={`px-4 py-2 bg-white/5 flex flex-col gap-2 cursor-pointer hover:bg-white/10 border-r-4 hover:border-white ${
                   location.pathname.match("/dashboard/tasks/" + task.id)
-                    ? "bg-white/20 border-white"
+                    ? "border-white"
                     : ""
                 }`}
               >

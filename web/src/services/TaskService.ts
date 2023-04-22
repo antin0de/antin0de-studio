@@ -17,6 +17,15 @@ export interface TaskRun {
 }
 
 export class TaskService {
+  static async createTask(task: {
+    name: string;
+    taskType: string;
+    taskConfig: string;
+    cronSchedule: string;
+  }): Promise<void> {
+    await ApiService.post("/v1/tasks", task);
+  }
+
   static async listTasks(): Promise<Task[]> {
     const response = await ApiService.get<{ tasks: Task[] }>("/v1/tasks");
     return response.tasks;
