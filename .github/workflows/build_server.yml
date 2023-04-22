@@ -39,3 +39,12 @@ jobs:
           password: "${{ secrets.SSH_PASSWORD }}"
           localPath: "./server/server"
           remotePath: "./antin0de-studio/"
+
+      - name: Run new server verion
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          port: 22
+          script: chmod +x ./antin0de-studio/server && pm2 restart studio-server
