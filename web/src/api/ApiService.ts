@@ -1,4 +1,9 @@
-const API_ENDPOINT = "http://localhost:8080";
+let API_ENDPOINT: string;
+if (process.env.NODE_ENV === "production") {
+  API_ENDPOINT = "https://api.studio.antin0.de";
+} else {
+  API_ENDPOINT = "http://localhost:8080";
+}
 
 export class ApiService {
   static async get<T>(path: string): Promise<T> {

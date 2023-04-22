@@ -8,6 +8,7 @@ import {
 import { Formik, FormikErrors } from "formik";
 import { AuthService } from "../services/AuthService";
 import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
 
 interface LoginFormFormModel {
   password: string;
@@ -15,10 +16,28 @@ interface LoginFormFormModel {
 
 export function LoginPage() {
   const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(true);
+
+  const checkAuthStatus = async () => {
+    const loggedin = await AuthService.getLoginStatus();
+    if (loggedin) {
+      navigate("/dashboard/domains");
+    } else {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    checkAuthStatus();
+  }, []);
 
   return (
-    <div className="max-w-xl mx-auto flex flex-col gap-4">
+    <div className="max-w-lg mx-auto flex flex-col gap-4">
       <h1 className="text-2xl font-bold mt-16">Login</h1>
+      <div className="text-sm">
+        You can find the password within <code>.env</code> file. Which is called{" "}
+        <code>MASTER_PASSWORD</code>
+      </div>
       <Formik
         initialValues={{ password: "" } satisfies LoginFormFormModel}
         validate={(values) => {
@@ -52,12 +71,14 @@ export function LoginPage() {
           <form onSubmit={handleSubmit}>
             <div className="flex flex-col gap-4">
               <FormControl isInvalid={!!errors.password && touched.password}>
-                <FormLabel>Password</FormLabel>
+                <FormLabel className="text-sm">Password</FormLabel>
                 <Input
                   type="password"
                   name="password"
+                  size="sm"
                   onChange={handleChange}
                   onBlur={handleBlur}
+                  disabled={isSubmitting || isLoading}
                 />
                 {errors.password && touched.password && (
                   <FormErrorMessage>{errors.password}</FormErrorMessage>
@@ -67,7 +88,8 @@ export function LoginPage() {
                 variant={"outline"}
                 colorScheme="green"
                 type="submit"
-                isLoading={isSubmitting}
+                size={"sm"}
+                isLoading={isSubmitting || isLoading}
               >
                 Login
               </Button>

@@ -11,6 +11,7 @@ import { DomainsPage } from "./pages/dashboard/Domains";
 import { TasksPage } from "./pages/dashboard/Tasks";
 import { CreateTaskPage } from "./pages/dashboard/CreateTask";
 import { TaskDetailsPage } from "./pages/dashboard/TaskDetails";
+import { NotFoundPage } from "./pages/NotFoundPage";
 
 const router = createBrowserRouter([
   {
@@ -40,6 +41,10 @@ const router = createBrowserRouter([
         element: <CreateTaskPage />,
       },
     ],
+  },
+  {
+    path: "*",
+    element: <NotFoundPage />,
   },
 ]);
 
