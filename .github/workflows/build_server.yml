@@ -21,6 +21,15 @@ jobs:
           name: server
           path: ./server/server
 
+      - name: Remove existing binary from server
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          password: ${{ secrets.SSH_PASSWORD }}
+          port: 22
+          script: rm ./antinode-studio/server
+
       - name: Upload binary to server
         uses: Creepios/sftp-action@v1.0.3
         with:
