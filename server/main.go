@@ -52,6 +52,7 @@ func main() {
 	h := handlers.HandlerParams{Db: db, CronInstance: c, TaskToCronEntryMap: &taskToCronEntryMap}
 
 	// Routes
+	r.GET("/", h.GetBanner())
 	r.POST("/v1/login", h.Login())
 	r.GET("/v1/loginStatus", h.LoginStatus())
 	r.POST("/v1/logout", h.Logout())
