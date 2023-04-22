@@ -20,3 +20,13 @@ jobs:
         with:
           name: server
           path: ./server/server
+
+      - name: Upload binary to server
+        uses: Creepios/sftp-action@v1.0.3
+        with:
+          host: "${{ secrets.SSH_HOST }}"
+          port: 22
+          username: "${{ secrets.SSH_USER }}"
+          password: "${{ secrets.SSH_PASSWORD }}"
+          localPath: "./server/server"
+          remotePath: "./antin0de-studio/server"
