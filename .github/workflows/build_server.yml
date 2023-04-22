@@ -47,4 +47,4 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           password: ${{ secrets.SSH_PASSWORD }}
           port: 22
-          script: chmod +x ./antin0de-studio/server && source .bashrc && pm2 restart studio-server
+          script: chmod +x ./antin0de-studio/server && pm2 restart studio-server
