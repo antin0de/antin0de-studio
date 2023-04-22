@@ -29,4 +29,4 @@ jobs:
           username: "${{ secrets.SSH_USER }}"
           password: "${{ secrets.SSH_PASSWORD }}"
           localPath: "./server/server"
-          remotePath: "./antin0de-studio"
+          remotePath: "./antin0de-studio/"
