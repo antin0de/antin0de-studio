@@ -24,7 +24,7 @@ export function TasksPage() {
   }, []);
 
   return (
-    <div className="flex-1 flex flex-col gap-4">
+    <div className="flex-1 flex flex-col gap-4 h-full">
       <div className="flex flex-col gap-4">
         <div className="flex gap-8">
           <div>
@@ -41,10 +41,10 @@ export function TasksPage() {
           Create Task
         </Button>
       </div>
-      <div className="flex gap-8">
-        <div className="w-96">
+      <div className="flex flex-1 overflow-hidden gap-8">
+        <div className="w-96 flex flex-col gap-2">
           <h2 className="text-xl">Tasks</h2>
-          <div className="flex flex-col gap-4 pt-4">
+          <div className="flex flex-col gap-4 pt-4 pr-2 flex-1 overflow-y-scroll">
             {tasks.map((task) => (
               <div
                 key={task.id}
@@ -64,9 +64,9 @@ export function TasksPage() {
             ))}
           </div>
         </div>
-        <div className="flex-1">
+        <div className="flex-1 flex flex-col gap-2">
           <h2 className="text-xl">Task Details</h2>
-          <div className="pt-4">
+          <div className="pt-4 flex-1 overflow-y-scroll">
             <Outlet />
           </div>
         </div>

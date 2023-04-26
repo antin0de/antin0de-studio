@@ -41,7 +41,7 @@ export function DashboardLayout() {
           ))}
         </div>
       </div>
-      <div className="px-4 py-8 flex-1">
+      <div className="px-4 pt-8 pb-2 flex-1 h-screen overflow-hidden">
         <Outlet />
       </div>
     </div>

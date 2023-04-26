@@ -73,7 +73,7 @@ export function DomainsPage() {
   };
 
   return (
-    <div className="flex-1">
+    <div className="flex-1 h-full overflow-y-scroll">
       <div className="flex flex-col gap-4">
         <div className="flex gap-8">
           <div>
