@@ -19,6 +19,8 @@ import {
   AiOutlineReload,
 } from "react-icons/ai";
 
+let pollInterval: NodeJS.Timeout | null = null;
+
 export function TaskDetailsPage() {
   const { taskId } = useParams<{ taskId: string }>();
   const [task, setTask] = useState<Task | null>(null);
@@ -35,14 +37,13 @@ export function TaskDetailsPage() {
   };
 
   useEffect(() => {
-    const pollInterval = setInterval(() => {
+    reloadCurrentTask();
+    if (pollInterval) {
+      clearInterval(pollInterval);
+    }
+    pollInterval = setInterval(() => {
       reloadCurrentTask();
     }, 3000);
-    return () => clearInterval(pollInterval);
-  }, []);
-
-  useEffect(() => {
-    reloadCurrentTask();
   }, [taskId]);
 
   const reloadCurrentTask = async () => {
