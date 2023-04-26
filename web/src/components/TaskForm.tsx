@@ -5,6 +5,7 @@ import {
   FormLabel,
   Input,
   Select,
+  Textarea,
 } from "@chakra-ui/react";
 import { Formik, FormikErrors } from "formik";
 
@@ -30,7 +31,7 @@ export function TaskForm({ task, onSubmit, buttonText }: TaskFormProps) {
           : ({
               name: "",
               taskType: "BBOT_SCAN",
-              taskConfig: "",
+              taskConfig: "key: value",
               cronSchedule: "1 1 * * *",
             } satisfies TaskFormModel)
       }
@@ -107,9 +108,8 @@ export function TaskForm({ task, onSubmit, buttonText }: TaskFormProps) {
               )}
             </FormControl>
             <FormControl isInvalid={!!errors.taskConfig && touched.taskConfig}>
-              <FormLabel className="text-sm">Task Config</FormLabel>
-              <Input
-                type="text"
+              <FormLabel className="text-sm">Task Config (yaml)</FormLabel>
+              <Textarea
                 name="taskConfig"
                 size="sm"
                 value={values.taskConfig}

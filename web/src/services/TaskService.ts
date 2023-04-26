@@ -27,6 +27,18 @@ export class TaskService {
     await ApiService.post("/v1/tasks", task);
   }
 
+  static async updateTask(
+    id: string,
+    task: {
+      name: string;
+      taskType: string;
+      taskConfig: string;
+      cronSchedule: string;
+    }
+  ) {
+    await ApiService.put(`/v1/tasks/${id}`, task);
+  }
+
   static async listTasks(): Promise<Task[]> {
     const response = await ApiService.get<{ tasks: Task[] }>("/v1/tasks");
     return response.tasks;

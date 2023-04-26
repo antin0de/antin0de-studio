@@ -42,7 +42,7 @@ export function EditTaskPage() {
             cronSchedule: task.cronSchedule,
           }}
           onSubmit={async (values) => {
-            await TaskService.createTask({
+            await TaskService.updateTask(task.id, {
               name: values.name,
               taskType: values.taskType,
               taskConfig: values.taskConfig,
