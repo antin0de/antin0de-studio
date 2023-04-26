@@ -28,7 +28,7 @@ func main() {
 		} else {
 			println("Running Task: " + resp.TaskRun.ID)
 			startTime := time.Now()
-			output, err := RunCommandAndGetOutput(toolsDir, "./bbot-scan.sh", "-t", resp.TaskRun.Task.TaskConfig, "-n", "owasp-scan", "-p", "localpass")
+			output, err := RunCommandAndGetOutput(toolsDir, "./bbot-scan.sh", "-h", apiEndpoint, "-t", resp.TaskRun.Task.TaskConfig, "-n", "owasp-scan", "-p", "localpass")
 			endTime := time.Now()
 			if err != nil {
 				api.UpdateTaskRun(resp.TaskRun.ID, api_client.UpdateTaskRunRequest{

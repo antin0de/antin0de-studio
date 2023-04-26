@@ -1,6 +1,6 @@
 #!/bin/bash
 
-while getopts ":it:n:p:" opt; do
+while getopts ":it:n:h:p:" opt; do
   case $opt in
     i)
       INTERACTIVE="1"
@@ -10,6 +10,9 @@ while getopts ":it:n:p:" opt; do
       ;;
     n)
       SCAN_NAME="$OPTARG"
+      ;;
+    h)
+      API_HOST="$OPTARG"
       ;;
     p)
       PASSWORD="$OPTARG"
@@ -21,6 +24,8 @@ while getopts ":it:n:p:" opt; do
 done
 
 if [[ "$INTERACTIVE" == "1" ]]; then
+    read -p "API Host: " API_HOST
+    echo "Using API host $API_HOST"
     read -s -p "Antin0de Studio Password: " PASSWORD
     echo ""
     read -p "Domain Name: " DOMAIN
@@ -36,6 +41,6 @@ CSV_OUTPUT="$SCAN_DIR/output.csv"
 while IFS="," read -r REC_TYPE REC_VALUE REC_REMAINING
 do
     if [[ "$REC_TYPE" == "DNS_NAME" ]]; then
-        ./studio-api.sh POST /v1/domains "{\"fqdn\": \"$REC_VALUE\"}" $PASSWORD
+        ./studio-api.sh $API_HOST POST /v1/domains "{\"fqdn\": \"$REC_VALUE\"}" $PASSWORD
     fi
 done < <(tail -n +2 $CSV_OUTPUT)
