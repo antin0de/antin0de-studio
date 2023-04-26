@@ -23,21 +23,28 @@ import {
 import { useEffect, useState } from "react";
 import { Domain, DomainService } from "../../services/DomainService";
 import moment from "moment";
-import { AiOutlineDownload } from "react-icons/ai";
+import { AiOutlineDownload, AiOutlineReload } from "react-icons/ai";
 
 export function DomainsPage() {
   const [domains, setDomains] = useState<Domain[]>([]);
   const [filter, setFilter] = useState("");
   const [appliedFilter, setAppliedFilter] = useState("");
   const [shownDomains, setShownDomains] = useState<Domain[]>([]);
+  const [isLoadingDomains, setIsLoadingDomains] = useState(true);
 
   const reloadDomains = async () => {
+    setIsLoadingDomains(true);
     const domains = await DomainService.listDomains();
     setDomains(domains);
+    setIsLoadingDomains(false);
   };
 
   useEffect(() => {
     reloadDomains();
+    const pollInterval = setInterval(() => {
+      reloadDomains();
+    }, 3000);
+    return () => clearInterval(pollInterval);
   }, []);
 
   useEffect(() => {
@@ -120,6 +127,15 @@ export function DomainsPage() {
             onClick={downloadTxtFile}
           >
             TXT
+          </Button>
+          <Button
+            size="sm"
+            variant={"ghost"}
+            leftIcon={<AiOutlineReload />}
+            onClick={reloadDomains}
+            isLoading={isLoadingDomains}
+          >
+            Reload
           </Button>
         </div>
         <TableContainer>
