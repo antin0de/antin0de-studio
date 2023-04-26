@@ -2,7 +2,12 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { Task, TaskService } from "../../services/TaskService";
 import moment from "moment";
-import { Badge, Button } from "@chakra-ui/react";
+import { Badge, Button, CircularProgress } from "@chakra-ui/react";
+import {
+  AiFillCheckCircle,
+  AiFillPauseCircle,
+  AiFillCloseCircle,
+} from "react-icons/ai";
 
 export function TaskDetailsPage() {
   const { taskId } = useParams<{ taskId: string }>();
@@ -45,7 +50,42 @@ export function TaskDetailsPage() {
             <div className="flex justify-between">
               <div className="text-sm">{run.id}</div>
               <div>
-                <Badge>{run.status}</Badge>
+                {run.status === "RUNNING" && (
+                  <Badge colorScheme="yellow">
+                    <div className="flex gap-2 p-1 items-center">
+                      <CircularProgress
+                        isIndeterminate
+                        size={4}
+                        color="yellow.300"
+                      />
+                      <div>Running</div>
+                    </div>
+                  </Badge>
+                )}
+                {run.status === "SUCCESS" && (
+                  <Badge colorScheme="green">
+                    <div className="flex gap-2 p-1 items-center">
+                      <AiFillCheckCircle />
+                      <div>Success</div>
+                    </div>
+                  </Badge>
+                )}
+                {run.status === "FAILED" && (
+                  <Badge colorScheme="red">
+                    <div className="flex gap-2 p-1 items-center">
+                      <AiFillCloseCircle />
+                      <div>Failed</div>
+                    </div>
+                  </Badge>
+                )}
+                {run.status === "PENDING" && (
+                  <Badge colorScheme="default">
+                    <div className="flex gap-2 p-1 items-center">
+                      <AiFillPauseCircle />
+                      <div>Pending</div>
+                    </div>
+                  </Badge>
+                )}
               </div>
             </div>
             <div className="text-sm text-white/50">
