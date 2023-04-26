@@ -1,33 +1,70 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { Task, TaskService } from "../../services/TaskService";
+import { Task, TaskRun, TaskService } from "../../services/TaskService";
 import moment from "moment";
-import { Badge, Button, CircularProgress } from "@chakra-ui/react";
+import {
+  Badge,
+  Button,
+  CircularProgress,
+  Drawer,
+  DrawerBody,
+  DrawerContent,
+  DrawerHeader,
+  DrawerOverlay,
+} from "@chakra-ui/react";
 import {
   AiFillCheckCircle,
   AiFillPauseCircle,
   AiFillCloseCircle,
+  AiOutlineReload,
 } from "react-icons/ai";
 
 export function TaskDetailsPage() {
   const { taskId } = useParams<{ taskId: string }>();
   const [task, setTask] = useState<Task | null>(null);
+  const [isLoadingTask, setIsLoadingTask] = useState(false);
+  const [isRunDetailsDrawerOpen, setIsRunDetailsDrawerOpen] = useState(false);
+  const [selectedRun, setSelectedRun] = useState<TaskRun | null>(null);
   const navigate = useNavigate();
 
   const reloadTask = async (taskId: string) => {
+    setIsLoadingTask(true);
     const task = await TaskService.getTask(taskId);
     setTask(task);
+    setIsLoadingTask(false);
   };
 
   useEffect(() => {
-    reloadTask(taskId ?? "");
+    const pollInterval = setInterval(() => {
+      reloadCurrentTask();
+    }, 3000);
+    return () => clearInterval(pollInterval);
+  }, []);
+
+  useEffect(() => {
+    reloadCurrentTask();
   }, [taskId]);
+
+  const reloadCurrentTask = async () => {
+    reloadTask(taskId ?? "");
+  };
 
   if (!task) return null;
 
   return (
-    <div className="flex flex-col gap-2">
-      <div className="text-lg">{task.name}</div>
+    <div className="flex flex-col gap-2 max-w-2xl">
+      <div className="flex place-content-between">
+        <div className="text-lg">{task.name}</div>
+        <Button
+          size="sm"
+          variant={"ghost"}
+          leftIcon={<AiOutlineReload />}
+          onClick={reloadCurrentTask}
+          isLoading={isLoadingTask}
+        >
+          Reload
+        </Button>
+      </div>
       <div className="text-sm">
         {task.taskType} - {task.cronSchedule}
       </div>
@@ -40,16 +77,27 @@ export function TaskDetailsPage() {
           Edit Task
         </Button>
       </div>
-      <h2 className="text-lg mt-8">Task Runs</h2>
-      <div className="flex flex-col gap-2 max-w-2xl">
+      <h2 className="text-lg mt-8">
+        Task Runs ({(task.taskRuns ?? []).length})
+      </h2>
+      <div className="flex flex-col gap-2">
         {(task.taskRuns ?? []).map((run) => (
           <div
             key={run.id}
-            className="px-4 py-2 bg-white/5 flex flex-col gap-1 cursor-pointer hover:bg-white/20"
+            className="px-4 py-4 bg-white/5 flex flex-col gap-1 cursor-pointer hover:bg-white/20"
+            onClick={() => {
+              setSelectedRun(run);
+              setIsRunDetailsDrawerOpen(true);
+            }}
           >
             <div className="flex justify-between">
-              <div className="text-sm">{run.id}</div>
-              <div>
+              <div className="flex flex-col gap-2">
+                <div className="text-sm">{run.id}</div>
+                <div className="text-sm text-white/50">
+                  {moment(run.createdAt).calendar()}
+                </div>
+              </div>
+              <div className="flex flex-col items-end gap-2">
                 {run.status === "RUNNING" && (
                   <Badge colorScheme="yellow">
                     <div className="flex gap-2 p-1 items-center">
@@ -86,14 +134,32 @@ export function TaskDetailsPage() {
                     </div>
                   </Badge>
                 )}
+                {run.status === "SUCCESS" || run.status === "FAILED" ? (
+                  <div className="text-xs text-white/50">
+                    {Math.round(run.runDuration / 1000000)}ms
+                  </div>
+                ) : null}
               </div>
-            </div>
-            <div className="text-sm text-white/50">
-              {moment(run.createdAt).calendar()}
             </div>
           </div>
         ))}
       </div>
+      {selectedRun ? (
+        <Drawer
+          size="xl"
+          placement={"right"}
+          onClose={() => setIsRunDetailsDrawerOpen(false)}
+          isOpen={isRunDetailsDrawerOpen}
+        >
+          <DrawerOverlay />
+          <DrawerContent>
+            <DrawerHeader borderBottomWidth="1px">Run Logs</DrawerHeader>
+            <DrawerBody>
+              <pre>{selectedRun.log}</pre>
+            </DrawerBody>
+          </DrawerContent>
+        </Drawer>
+      ) : null}
     </div>
   );
 }

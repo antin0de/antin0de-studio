@@ -8,7 +8,15 @@ import (
 )
 
 type TaskRun struct {
-	ID string `json:"id"`
+	ID   string `json:"id"`
+	Task Task   `json:"task"`
+}
+
+type Task struct {
+	ID         string `json:"id"`
+	Name       string `json:"name"`
+	TaskType   string `json:"taskType"`
+	TaskConfig string `json:"taskConfig"`
 }
 
 type DequeueTaskRunResponse struct {
@@ -50,8 +58,9 @@ func (a *ApiClientParams) DequeueTaskRun() DequeueTaskRunResponse {
 }
 
 type UpdateTaskRunRequest struct {
-	Status string `json:"status"`
-	Log    string `json:"log"`
+	Status      string `json:"status"`
+	RunDuration int64  `json:"runDuration"`
+	Log         string `json:"log"`
 }
 
 func (a *ApiClientParams) UpdateTaskRun(taskRunId string, request UpdateTaskRunRequest) bool {

@@ -12,6 +12,7 @@ export interface Task {
 export interface TaskRun {
   id: string;
   status: string;
+  runDuration: number;
   log: string;
   createdAt: string;
 }

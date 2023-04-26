@@ -27,16 +27,20 @@ func main() {
 			time.Sleep(5 * time.Second)
 		} else {
 			println("Running Task: " + resp.TaskRun.ID)
-			output, err := RunCommandAndGetOutput(toolsDir, "./bbot-scan.sh", "-t", "owasp.org", "-n", "owasp-scan", "-p", "localpass")
+			startTime := time.Now()
+			output, err := RunCommandAndGetOutput(toolsDir, "./bbot-scan.sh", "-t", resp.TaskRun.Task.TaskConfig, "-n", "owasp-scan", "-p", "localpass")
+			endTime := time.Now()
 			if err != nil {
 				api.UpdateTaskRun(resp.TaskRun.ID, api_client.UpdateTaskRunRequest{
-					Status: "FAILED",
-					Log:    err.Error(),
+					Status:      "FAILED",
+					RunDuration: endTime.Sub(startTime).Nanoseconds(),
+					Log:         err.Error(),
 				})
 			} else {
 				api.UpdateTaskRun(resp.TaskRun.ID, api_client.UpdateTaskRunRequest{
-					Status: "SUCCESS",
-					Log:    output,
+					Status:      "SUCCESS",
+					RunDuration: endTime.Sub(startTime).Nanoseconds(),
+					Log:         output,
 				})
 			}
 

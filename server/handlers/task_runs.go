@@ -49,8 +49,9 @@ func (h *HandlerParams) DequeueTaskRun() gin.HandlerFunc {
 }
 
 type UpdateTaskRunRequestBody struct {
-	Status string `json:"status"`
-	Log    string `json:"log"`
+	Status      string `json:"status"`
+	RunDuration int64  `json:"runDuration"`
+	Log         string `json:"log"`
 }
 
 // Update a task run
@@ -76,6 +77,7 @@ func (h *HandlerParams) UpdateTaskRun() gin.HandlerFunc {
 		}
 
 		taskRun.Status = request.Status
+		taskRun.RunDuration = request.RunDuration
 		taskRun.Log = request.Log
 		h.Db.Save(&taskRun)
 
